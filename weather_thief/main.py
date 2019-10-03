@@ -1,5 +1,6 @@
 import csv
 from datetime import timezone, datetime
+from time import sleep
 
 import pandas as pd
 import requests
@@ -15,8 +16,9 @@ def call_api(time):
     if response.status_code == 200:
         print('Success!')
     else:
-        print('We broke it')
-        exit(0)
+        print('Oh noes! it died')
+        print(response.status_code)
+        return {"hourly": {'data': []}}
     return response.json()
 
 
@@ -30,10 +32,14 @@ def time_loop(open_file):
                     json_response = call_api(time)
                     df_weather = pd.DataFrame.from_records(json_response['hourly']['data'])
                     df_weather.to_csv(open_file, header=False, quoting=csv.QUOTE_NONE)
+                    sleep(0.25)
                 except ValueError:
                     continue
 
 
-def main():
+def get_data():
     with open('weather_data.csv', mode='a') as csv_file:
         time_loop(csv_file)
+
+
+
