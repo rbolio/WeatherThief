@@ -41,5 +41,8 @@ def get_data():
     with open('weather_data.csv', mode='a') as csv_file:
         time_loop(csv_file)
 
+def analyze_this():
+    data_input = pd.read_csv('weather_data.csv')
+    print (data_input.to_string())
 
-
+analyze_this()
