@@ -265,3 +265,4 @@ pyvenv.cfg
 pip-selfcheck.json
 
 .idea/
+!/weather_thief/personal_data_live.py
