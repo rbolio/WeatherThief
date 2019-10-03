@@ -1,6 +1,9 @@
-import requests
 import csv
 from datetime import timezone, datetime
+
+import pandas as pd
+import requests
+
 from weather_thief.personal_data_live import secret_key, longitude, latitude
 
 
@@ -17,32 +20,20 @@ def call_api(time):
     return response.json()
 
 
-def time_loop():
-
+def time_loop(open_file):
     for year in range(2017, 2020):
         for month in range(1, 13):
             for day in range(1, 32):
                 try:
-                    dt = datetime(year=year, month=month, day=day, hour=12)
+                    dt = datetime(year=year, month=month, day=day, hour=23)
                     time = int(dt.replace(tzinfo=timezone.utc).timestamp())
-                    info_json = call_api(time)
-                    #write info json
+                    json_response = call_api(time)
+                    df_weather = pd.DataFrame.from_records(json_response['hourly']['data'])
+                    df_weather.to_csv(open_file, header=False, quoting=csv.QUOTE_NONE)
                 except ValueError:
                     continue
 
 
-
-
-
-
-def append_to_csv(input_json):
-    for hourly_data in input_json['hourly']['data']:
-        time = hourly_data['time']
-        temperature = hourly_data['temperature']
-        print(f'Hour:{time}, temperature: {temperature}')
-
-
-dt = datetime(year=2018, month=12, day=5, hour=23)
-time = int(dt.replace(tzinfo=timezone.utc).timestamp())
-json_response = call_api(time)
-
+def main():
+    with open('weather_data.csv', mode='a') as csv_file:
+        time_loop(csv_file)
