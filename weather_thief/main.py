@@ -25,7 +25,7 @@ def call_api(time):
 
 def time_loop(open_file):
     for year in range(2019, 2020):
-        for month in range(9, 13):
+        for month in range(1, 13):
             for day in range(1, 32):
                 try:
                     dt = datetime(year=year, month=month, day=day, hour=23)
