@@ -1,4 +1,5 @@
 import csv
+import time
 from datetime import timezone, datetime
 from time import sleep
 
@@ -47,5 +48,20 @@ def analyze_this():
     print(data_input.to_string())
 
 
+def convert_date():
+    with open('weather_data.csv', mode='r') as csv_file:
+        with open('weather_clean_date.csv', mode='a') as output_file:
+            reader = csv.reader(csv_file)
+            writer = csv.writer(output_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            for row in reader:
+                try:
+                    date_time = str(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(row[1]))))
+                    row[1] = date_time
+                except:
+                    print("Headers")
+                writer.writerow(row)
+
+
 # get_data()
-analyze_this()
+# analyze_this()
+convert_date()
